@@ -41,7 +41,7 @@ jobs:
 
   deploy-directly:
     runs-on: ubuntu-20.04
-    needs: [check-migrations, run-migrations]
+    needs: check-migrations
     if: always() && github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'no'
     environment:
       name: production
