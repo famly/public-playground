@@ -1,10 +1,10 @@
 name: "environment test"
 
-# Check out https://help.github.com/en/articles/workflow-syntax-for-github-actions for documentation on Actions.
+# Check out the documentation for more info:
+# - https://help.github.com/en/articles/workflow-syntax-for-github-actions
+# - https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idoutputs
 on: [push]
 
-# We'll utilize job outputs to pass information between jobs.
-# - https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idoutputs
 jobs:
   check-migrations:
     runs-on: ubuntu-20.04
@@ -18,19 +18,22 @@ jobs:
         run: |
           echo "::set-output name=has-migrations::yes"
 
-  # output-check:
-  #   runs-on: ubuntu-20.04
-  #   needs: check-migrations
-  #   steps:
-  #     - name: Output
-  #       run: |
-  #         echo "${{needs.check-migrations.outputs.has-migrations}}"
+  output-validation:
+    runs-on: ubuntu-20.04
+    needs: check-migrations
+    if: needs.check-migrations.outputs.has-migrations != 'yes' && needs.check-migrations.outputs.has-migrations != 'no'
+    steps:
+      - name: Notify about invalid output
+        run: |
+          echo "The 'check-migrations' job produced invalid output:"
+          echo "${{needs.check-migrations.outputs.has-migrations}}"
 
   run-migrations:
     runs-on: ubuntu-20.04
     needs: check-migrations
-    if: github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'yes'
+    if: needs.check-migrations.outputs.has-migrations == 'yes'
     environment:
+      # A manual confirmation is enforced using environment protection rules.
       name: run-migrations
     steps:
       - name: Waiting for migations to have run
