@@ -29,7 +29,7 @@ jobs:
   run-migrations:
     runs-on: ubuntu-20.04
     needs: check-migrations
-    if: github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'yes2'
+    if: github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'yes'
     environment:
       name: run-migrations
     steps:
