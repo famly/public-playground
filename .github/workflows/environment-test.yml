@@ -17,8 +17,8 @@ jobs:
       - id: whatchanged
         name: whatchanged
         run: |
-          OUTPUT="yes"
-          echo "::set-output name=has-migrations::$OUTPUT"
+          $output="yes"
+          echo "::set-output name=has-migrations::$output"
 
   run-migrations:
     runs-on: ubuntu-20.04
