@@ -16,7 +16,7 @@ jobs:
       - id: whatchanged
         name: whatchanged
         run: |
-          echo "::set-output name=has-migrations::no"
+          echo "::set-output name=has-migrations::yes"
 
   output-validation:
     runs-on: ubuntu-20.04
