@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Output
         run: |
-          echo "${{needs.check-migrations.outputs.has-migrations}}""
+          echo "${{needs.check-migrations.outputs.has-migrations}}"
 
   run-migrations:
     runs-on: ubuntu-20.04
