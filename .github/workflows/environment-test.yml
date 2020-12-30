@@ -17,8 +17,7 @@ jobs:
       - id: whatchanged
         name: whatchanged
         run: |
-          export output="yes"
-          echo "::set-output name=has-migrations::$output"
+          echo "::set-output name=has-migrations::yes"
 
   output-check:
     runs-on: ubuntu-20.04
@@ -26,7 +25,7 @@ jobs:
     steps:
       - name: Output
         run: |
-          echo ${{needs.check-migrations.outputs.has-migrations}}
+          echo "${{needs.check-migrations.outputs.has-migrations}}""
 
   run-migrations:
     runs-on: ubuntu-20.04
