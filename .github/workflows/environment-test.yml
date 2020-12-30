@@ -22,8 +22,8 @@ jobs:
 
   run-migrations:
     runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/master' && needs.check-migrations.outputs.has-migrations == 'yes'
     needs: check-migrations
+    if: github.ref == 'refs/heads/master' && needs.check-migrations.outputs.has-migrations
     environment:
       name: run-migrations
       url: https://codetalk.io
