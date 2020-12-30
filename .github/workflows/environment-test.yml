@@ -22,10 +22,8 @@ jobs:
 
   run-migrations:
     runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/master'
-    needs:
-      - check-migrations
-      - check-migrations.outputs.has-migrations
+    if: github.ref == 'refs/heads/master' && needs.check-migrations.outputs.has-migrations == 'yes'
+    needs: check-migrations
     environment:
       name: run-migrations
       url: https://codetalk.io
@@ -36,10 +34,8 @@ jobs:
 
   deploy-directly:
     runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/master'
-    needs:
-      - check-migrations
-      - check-migrations.outputs.no-migrations
+    needs: check-migrations
+    if: github.ref == 'refs/heads/master' && needs.check-migrations.outputs.has-migrations == 'no'
     environment:
       name: production
       url: https://codetalk.io
