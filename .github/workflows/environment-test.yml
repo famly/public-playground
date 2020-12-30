@@ -20,13 +20,20 @@ jobs:
           export output="yes"
           echo "::set-output name=has-migrations::$output"
 
+  output-check:
+    runs-on: ubuntu-20.04
+    needs: check-migrations
+    steps:
+      - name: Output
+        run: |
+          echo ${{needs.check-migrations.outputs.has-migrations}}
+
   run-migrations:
     runs-on: ubuntu-20.04
     needs: check-migrations
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'yes'
     environment:
       name: run-migrations
-      url: https://codetalk.io
     steps:
       - name: Waiting for migations to have run
         run: |
@@ -36,10 +43,9 @@ jobs:
   deploy-directly:
     runs-on: ubuntu-20.04
     needs: check-migrations
-    if: github.ref == 'refs/heads/master' && needs.check-migrations.outputs.has-migrations == 'no'
+    if: github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'no'
     environment:
       name: production
-      url: https://codetalk.io
     steps:
       - name: Deploy
         run: |
