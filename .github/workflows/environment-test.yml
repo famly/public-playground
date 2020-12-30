@@ -17,7 +17,7 @@ jobs:
       - id: whatchanged
         name: whatchanged
         run: |
-          $output="yes"
+          export output="yes"
           echo "::set-output name=has-migrations::$output"
 
   run-migrations:
