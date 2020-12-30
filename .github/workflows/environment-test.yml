@@ -27,6 +27,7 @@ jobs:
         run: |
           echo "The 'check-migrations' job produced invalid output:"
           echo "${{needs.check-migrations.outputs.has-migrations}}"
+          exit 1
 
   run-migrations:
     runs-on: ubuntu-20.04
