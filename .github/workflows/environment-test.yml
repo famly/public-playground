@@ -30,7 +30,7 @@ jobs:
   run-migrations:
     runs-on: ubuntu-20.04
     needs: check-migrations
-    if: github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'yes2'
+    if: github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'yes'
     environment:
       name: run-migrations
     steps:
@@ -42,7 +42,18 @@ jobs:
   deploy-directly:
     runs-on: ubuntu-20.04
     needs: [check-migrations, run-migrations]
-    if: github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'no'
+    if: always() && github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'no'
+    environment:
+      name: production
+    steps:
+      - name: Deploy
+        run: |
+          echo "Deploy?"
+
+  deploy-after-migrations:
+    runs-on: ubuntu-20.04
+    needs: run-migrations
+    if: github.ref == 'refs/heads/main'
     environment:
       name: production
     steps:
