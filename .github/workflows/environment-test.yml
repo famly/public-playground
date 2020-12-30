@@ -23,7 +23,7 @@ jobs:
   run-migrations:
     runs-on: ubuntu-20.04
     needs: check-migrations
-    if: github.ref == 'refs/heads/master' && needs.check-migrations.outputs.has-migrations
+    if: github.ref == 'refs/heads/master'
     environment:
       name: run-migrations
       url: https://codetalk.io
@@ -31,6 +31,7 @@ jobs:
       - name: Waiting for migations to have run
         run: |
           echo "Waiting for migrations to complete..."
+          echo ${{needs.check-migrations.outputs.has-migrations}}
 
   deploy-directly:
     runs-on: ubuntu-20.04
