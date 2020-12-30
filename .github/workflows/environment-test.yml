@@ -8,8 +8,7 @@ on: [push]
 jobs:
   check-migrations:
     runs-on: ubuntu-20.04
-    environment:
-      name: ci
+    if: github.ref == 'refs/heads/main'
     outputs:
       has-migrations: ${{ steps.whatchanged.outputs.has-migrations }}
     steps:
@@ -19,13 +18,13 @@ jobs:
         run: |
           echo "::set-output name=has-migrations::yes"
 
-  output-check:
-    runs-on: ubuntu-20.04
-    needs: check-migrations
-    steps:
-      - name: Output
-        run: |
-          echo "${{needs.check-migrations.outputs.has-migrations}}"
+  # output-check:
+  #   runs-on: ubuntu-20.04
+  #   needs: check-migrations
+  #   steps:
+  #     - name: Output
+  #       run: |
+  #         echo "${{needs.check-migrations.outputs.has-migrations}}"
 
   run-migrations:
     runs-on: ubuntu-20.04
@@ -39,24 +38,63 @@ jobs:
           echo "Waiting for migrations to complete..."
           echo ${{needs.check-migrations.outputs.has-migrations}}
 
-  deploy-directly:
-    runs-on: ubuntu-20.04
-    needs: check-migrations
-    if: always() && github.ref == 'refs/heads/main' && needs.check-migrations.outputs.has-migrations == 'no'
-    environment:
-      name: production
-    steps:
-      - name: Deploy
-        run: |
-          echo "Deploy?"
-
+  ############ Post-migration Deployment Pipeline ############
   deploy-after-migrations:
     runs-on: ubuntu-20.04
     needs: run-migrations
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: production
     steps:
-      - name: Deploy
+      - name: Notify about deployment
         run: |
-          echo "Deploy?"
+          echo "The following PRs changed..."
+
+  deploy-after-migrations-aws:
+    name: deploy-aws
+    runs-on: ubuntu-20.04
+    needs: deploy-after-migrations
+    environment:
+      name: production aws
+    steps:
+      - name: Deploy to AWS
+        run: |
+          echo "Deploying..."
+  deploy-after-migrations-azure:
+    name: deploy-azure
+    runs-on: ubuntu-20.04
+    needs: deploy-after-migrations
+    environment:
+      name: production azure
+    steps:
+      - name: Deploy to Azure
+        run: |
+          echo "Deploying..."
+
+  ############ Direct Deployment Pipeline ############
+  deploy-directly:
+    runs-on: ubuntu-20.04
+    needs: check-migrations
+    if: needs.check-migrations.outputs.has-migrations == 'no'
+    steps:
+      - name: Notify about deployment
+        run: |
+          echo "The following PRs changed..."
+
+  deploy-directly-aws:
+    name: deploy-aws
+    runs-on: ubuntu-20.04
+    needs: deploy-directly
+    environment:
+      name: production aws
+    steps:
+      - name: Deploy to AWS
+        run: |
+          echo "Deploying..."
+  deploy-directly-azure:
+    name: deploy-azure
+    runs-on: ubuntu-20.04
+    needs: deploy-directly
+    environment:
+      name: production azure
+    steps:
+      - name: Deploy to Azure
+        run: |
+          echo "Deploying..."
