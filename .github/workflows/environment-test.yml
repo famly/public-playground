@@ -11,7 +11,7 @@ jobs:
     environment:
       name: ci
     outputs:
-      need-migrations: ${{ steps.whatchanged.outputs.has-migrations }}
+      has-migrations: ${{ steps.whatchanged.outputs.has-migrations }}
     steps:
       - uses: actions/checkout@v1
       - id: whatchanged
