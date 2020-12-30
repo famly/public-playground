@@ -1,0 +1,49 @@
+name: "environment test"
+
+# Check out https://help.github.com/en/articles/workflow-syntax-for-github-actions for documentation on Actions.
+on: [push]
+
+# We'll utilize job outputs to pass information between jobs.
+# - https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idoutputs
+jobs:
+  check-migrations:
+    runs-on: ubuntu-20.04
+    environment:
+      name: ci
+    outputs:
+      need-migrations: ${{ steps.whatchanged.outputs.has-migrations }}
+    steps:
+      - uses: actions/checkout@v1
+      - id: whatchanged
+        name: whatchanged
+        run: |
+          OUTPUT="yes"
+          echo "::set-output name=has-migrations::$OUTPUT"
+
+  run-migrations:
+    runs-on: ubuntu-20.04
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - check-migrations
+      - check-migrations.outputs.has-migrations
+    environment:
+      name: run-migrations
+      url: https://codetalk.io
+    steps:
+      - name: Waiting for migations to have run
+        run: |
+          echo "Waiting for migrations to complete..."
+
+  deploy-directly:
+    runs-on: ubuntu-20.04
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - check-migrations
+      - check-migrations.outputs.no-migrations
+    environment:
+      name: production
+      url: https://codetalk.io
+    steps:
+      - name: Deploy
+        run: |
+          echo "Deploy?"
