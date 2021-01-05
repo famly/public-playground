@@ -1,7 +1,7 @@
 # ⚠️ Public ⚠️
 Testing out GitHub features that require a public repository.
 
-The `.github/workflows/environment-test.yml` workflow experiements with a deployment pipeline that branches between requiring a manual confirmation or being fully automatic, depending on the output of the first job in the workflow.
+The `.github/workflows/environment-test.yml` workflow experiements with a deployment pipeline that branches between requiring a [manual confirmation](https://docs.github.com/en/free-pro-team@latest/actions/managing-workflow-runs/reviewing-deployments) or being fully automatic, depending on the output of the first job in the workflow. With regards to manual approvals, CircleCI also has [something similar](https://circleci.com/docs/2.0/workflows/#holding-a-workflow-for-a-manual-approval) it seems.
 
 Check out the flow charts in the following cases:
 
