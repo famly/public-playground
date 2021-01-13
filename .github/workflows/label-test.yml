@@ -1,4 +1,4 @@
-name: "environment test"
+name: "label test"
 
 # Check out the documentation for more info:
 # - https://help.github.com/en/articles/workflow-syntax-for-github-actions
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  check-migrations:
+  fail-if-label:
     runs-on: ubuntu-20.04
     if: contains(github.event.pull_request.labels.*.name, 'some-defined-label')
     steps:
