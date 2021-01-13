@@ -14,9 +14,5 @@ jobs:
 
       - name: check-label
         run: |
-          # Fix our shell to proper bash so the syntax below will work.
-          sudo mv /bin/sh /bin/sh-dash
-          sudo ln -s /bin/bash /bin/sh
-
           echo "Checking if PR has label 'invalid' (if true, will fail)..."
-          [[ "${{ contains(github.event.pull_request.labels.*.name, 'invalid') }}" == "true" ]] && exit 1 || exit 0
+          [ "${{ contains(github.event.pull_request.labels.*.name, 'invalid') }}" = "true" ] && exit 1 || exit 0
