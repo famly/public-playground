@@ -11,7 +11,7 @@ on:
     types: [synchronize, labeled, unlabeled]
 
 jobs:
-  requires-translations
+  requires-translations:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
