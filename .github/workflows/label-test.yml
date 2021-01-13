@@ -13,10 +13,10 @@ on:
 jobs:
   fail-if-label:
     runs-on: ubuntu-20.04
-    if: contains(github.event.pull_request.labels.*.name, 'invalid')
     steps:
       - uses: actions/checkout@v1
 
       - name: whatchanged
         run: |
           echo "Testing..."
+          echo ${{ contains(github.event.pull_request.labels.*.name, 'invalid') }}
