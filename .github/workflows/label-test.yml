@@ -11,12 +11,12 @@ on:
     types: [synchronize, labeled, unlabeled]
 
 jobs:
-  fail-if-label:
+  requires-translations
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
 
-      - name: whatchanged
+      - name: check-label
         run: |
-          echo "Testing..."
-          echo ${{ contains(github.event.pull_request.labels.*.name, 'invalid') }}
+          echo "Checking if PR has label 'invalid' (if true, will fail)..."
+          [[ "${{ contains(github.event.pull_request.labels.*.name, 'invalid') }}" == "true" ]] && exit 1
