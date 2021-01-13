@@ -7,6 +7,7 @@ on:
     branches-ignore:
       - master
       - main
+  pull_request: [labeled, unlabeled]
 
 jobs:
   fail-if-label:
