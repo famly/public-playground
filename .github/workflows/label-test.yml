@@ -3,10 +3,6 @@ name: "label test"
 # Check out the documentation for more info:
 # - https://help.github.com/en/articles/workflow-syntax-for-github-actions
 on:
-  # push:
-  #   branches-ignore:
-  #     - master
-  #     - main
   pull_request:
     types: [synchronize, labeled, unlabeled]
 
@@ -18,5 +14,7 @@ jobs:
 
       - name: check-label
         run: |
+          sudo mv /bin/sh /bin/sh-dash
+          sudo ln -s /bin/bash /bin/sh
           echo "Checking if PR has label 'invalid' (if true, will fail)..."
           [[ "${{ contains(github.event.pull_request.labels.*.name, 'invalid') }}" == "true" ]] && exit 1
