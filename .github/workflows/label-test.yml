@@ -1,0 +1,20 @@
+name: "environment test"
+
+# Check out the documentation for more info:
+# - https://help.github.com/en/articles/workflow-syntax-for-github-actions
+on:
+  push:
+    branches-ignore:
+      - master
+      - main
+
+jobs:
+  check-migrations:
+    runs-on: ubuntu-20.04
+    if: contains(github.event.pull_request.labels.*.name, 'some-defined-label')
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: whatchanged
+        run: |
+          echo "Testing..."
