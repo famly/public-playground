@@ -13,3 +13,7 @@ Check out the flow charts in the following cases:
 
 [Output of first job was invalid](https://github.com/famly/public-playground/actions/runs/452467071) (makes sure we don't think a deployment has run when none has been triggered)
 ![Output of first job was invalid](https://user-images.githubusercontent.com/1189998/103345421-a1312d00-4a91-11eb-90f2-0fa94fba46ed.png)
+
+# Continuous Deployment Flow
+
+<img width="1363" alt="Screenshot 2022-10-23 at 18 04 11" src="https://user-images.githubusercontent.com/1189998/197402815-116c801b-249f-44be-85be-36e5183c827d.png">
