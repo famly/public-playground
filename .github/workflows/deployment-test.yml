@@ -16,12 +16,14 @@ on:
         description: 'Which commit of Nuclearfamly to use'
         required: false
         default: 'latest'
-      tags:
+      wait-for-for-images:
         description: 'Wait for images to be built from currently running CI jobs'
         required: false
+        default: 'false'
         type: boolean
-      environment:
-        description: 'Environment to run tests against'
+      # TODO: Make it work so it skips jobs that other jobs are dependant on.
+      target:
+        description: 'Target environment to deploy'
         default: All
         required: false
         type: choice
@@ -44,8 +46,17 @@ jobs:
     name: "Preflight Check"
     steps:
       - uses: actions/checkout@v3
-      - name: Figure out which things changed so we know what we are deploying.
-        run: echo "Run something to list PRs."
+      - name: Check that images from the commit has finished building
+        if: ${{ inputs.wait-for-for-images == 'true' }}
+        timeout-minutes: 10
+        run: |
+          echo "Check that image is finished building for commit ${{ inputs.commit }}"
+          # for run in {1..40}; do docker manifest inspect famly/famlyapi:${{ inputs.commit }} && break || sleep 15; done
+
+      - name: Figure out which things changed so we know what we are deploying
+        run:
+          echo "Basing deployment on commit ${{ inputs.commit }}."
+          echo "Run something to list PRs."
 
       - name: Ping Slack about incoming Deployment Review
         run: echo "Pinging slack..."

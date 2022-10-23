@@ -3,7 +3,8 @@ name: "Environment Test"
 # Check out the documentation for more info:
 # - https://help.github.com/en/articles/workflow-syntax-for-github-actions
 # - https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idoutputs
-on: [push]
+on:
+  workflow_dispatch
 
 jobs:
   check-migrations:
