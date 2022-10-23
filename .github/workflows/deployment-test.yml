@@ -16,10 +16,10 @@ on:
         description: 'Which commit of Nuclearfamly to use'
         required: false
         default: 'latest'
-      wait-for-for-images:
+      wait-for-images:
         description: 'Wait for images to be built from currently running CI jobs'
         required: false
-        default: false
+        default: 'false'
         type: boolean
       # TODO: Make it work so it skips jobs that other jobs are dependant on.
       target:
@@ -47,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check that images from the commit has finished building
-        if: inputs.wait-for-for-images
+        if: ${{ inputs.wait-for-images == 'true' || inputs.wait-for-images }}
         timeout-minutes: 10
         run: |
           echo "Check that image is finished building for commit ${{ inputs.commit }}"
