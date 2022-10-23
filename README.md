@@ -17,3 +17,6 @@ Check out the flow charts in the following cases:
 # Continuous Deployment Flow
 
 <img width="1363" alt="Screenshot 2022-10-23 at 18 04 11" src="https://user-images.githubusercontent.com/1189998/197402815-116c801b-249f-44be-85be-36e5183c827d.png">
+
+
+<img width="1195" alt="Screenshot 2022-10-23 at 18 22 55" src="https://user-images.githubusercontent.com/1189998/197403725-bbde2242-7b97-4198-82e3-a25f6e0484a9.png">
