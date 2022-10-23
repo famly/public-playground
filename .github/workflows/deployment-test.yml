@@ -8,11 +8,9 @@ on:
     branches:
       - 'main'
 
-defaults:
-  runs-on: ubuntu-20.04
-
 jobs:
   preflight-check:
+    runs-on: ubuntu-20.04
     name: "Preflight Check"
     steps:
       - uses: actions/checkout@v3
@@ -23,19 +21,21 @@ jobs:
         run: echo "Pinging slack..."
 
   confirm-to-proceed-deployment:
+    runs-on: ubuntu-20.04
     name: "Deployment Review"
     needs: preflight-check
     timeout-minutes: 1 # We set a timeout simply to avoid accidentally wasting too many CI minutes.
     environment:
       # A manual confirmation is enforced using environment protection rules,
       # configured in: https://github.com/famly/public-playground/settings/environments
-      name: preflight
+      name: preflight check
     steps:
       - name: Ping Slack about deployments started
         run: echo "The following PRs will be deployed..."
 
   ################# We start first part of canary deployment to tryfamly_co #################
   deploy-tryfamly-co:
+    runs-on: ubuntu-20.04
     name: "Deploy: tryfamly_co"
     needs: confirm-to-proceed-deployment
     environment:
@@ -49,6 +49,7 @@ jobs:
         run: echo "Pinging Slack..."
 
   check-rollout-tryfamly-co:
+    runs-on: ubuntu-20.04
     name: "Check rollout: tryfamly_co"
     needs: deploy-tryfamly-co
     steps:
@@ -57,6 +58,7 @@ jobs:
 
   ################# We start second part of canary deployment to famly_de + famly_other #################
   deploy-famly-de:
+    runs-on: ubuntu-20.04
     name: "Deploy: famly_de"
     needs: confirm-to-proceed-deployment
     environment:
@@ -70,6 +72,7 @@ jobs:
         run: echo "Pinging Slack..."
 
   deploy-famly-other:
+    runs-on: ubuntu-20.04
     name: "Deploy: famly_other"
     needs: confirm-to-proceed-deployment
     environment:
@@ -83,6 +86,7 @@ jobs:
         run: echo "Pinging Slack..."
 
   check-rollout-famly-de:
+    runs-on: ubuntu-20.04
     name: "Check rollout: famly_de"
     needs: deploy-famly-de
     steps:
@@ -90,6 +94,7 @@ jobs:
         run: echo "Checking..."
 
   check-rollout-famly-other:
+    runs-on: ubuntu-20.04
     name: "Check rollout: famly_other"
     needs: deploy-famly-other
     steps:
@@ -98,6 +103,7 @@ jobs:
 
   ################# In the final stage we deploy to famly_co #################
   deploy-famly-co:
+    runs-on: ubuntu-20.04
     name: "Deploy: famly_co"
     needs: [check-rollout-famly-de, check-rollout-famly-other]
     environment:
@@ -111,6 +117,7 @@ jobs:
         run: echo "Pinging Slack..."
 
   check-rollout-famly-co:
+    runs-on: ubuntu-20.04
     name: "Check rollout: famly_co"
     needs: [deploy-famly-co]
     steps:
