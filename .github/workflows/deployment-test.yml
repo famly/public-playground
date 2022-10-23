@@ -47,14 +47,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check that images from the commit has finished building
-        if: ${{ inputs.wait-for-images == 'true' || inputs.wait-for-images }}
+        if: ${{ inputs.wait-for-images == 'true' || inputs.wait-for-images && true }}
         timeout-minutes: 10
         run: |
           echo "Check that image is finished building for commit ${{ inputs.commit }}"
           # for run in {1..40}; do docker manifest inspect famly/famlyapi:${{ inputs.commit }} && break || sleep 15; done
 
       - name: Figure out which things changed so we know what we are deploying
-        run:
+        run: |
           echo "Basing deployment on commit ${{ inputs.commit }}."
           echo "Run something to list PRs."
 
