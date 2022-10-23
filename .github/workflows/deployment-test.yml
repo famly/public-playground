@@ -60,7 +60,7 @@ jobs:
   deploy-famly-de:
     runs-on: ubuntu-20.04
     name: "Deploy: famly_de"
-    needs: confirm-to-proceed-deployment
+    needs: check-rollout-tryfamly-co
     environment:
       name: production azure
     steps:
@@ -74,7 +74,7 @@ jobs:
   deploy-famly-other:
     runs-on: ubuntu-20.04
     name: "Deploy: famly_other"
-    needs: confirm-to-proceed-deployment
+    needs: check-rollout-tryfamly-co
     environment:
       name: production other
     steps:
