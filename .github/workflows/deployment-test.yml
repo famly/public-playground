@@ -1,0 +1,118 @@
+name: "Continuous Deployment"
+
+# Check out the documentation for more info:
+# - https://help.github.com/en/articles/workflow-syntax-for-github-actions
+# - https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idoutputs
+on:
+  push:
+    branches:
+      - 'main'
+
+defaults:
+  runs-on: ubuntu-20.04
+
+jobs:
+  preflight-check:
+    name: "Preflight Check"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Figure out which things changed so we know what we are deploying.
+        run: echo "Run something to list PRs."
+
+      - name: Ping Slack about incoming Deployment Review
+        run: echo "Pinging slack..."
+
+  confirm-to-proceed-deployment:
+    name: "Deployment Review"
+    needs: preflight-check
+    timeout-minutes: 1 # We set a timeout simply to avoid accidentally wasting too many CI minutes.
+    environment:
+      # A manual confirmation is enforced using environment protection rules,
+      # configured in: https://github.com/famly/public-playground/settings/environments
+      name: preflight
+    steps:
+      - name: Ping Slack about deployments started
+        run: echo "The following PRs will be deployed..."
+
+  ################# We start first part of canary deployment to tryfamly_co #################
+  deploy-tryfamly-co:
+    name: "Deploy: tryfamly_co"
+    needs: confirm-to-proceed-deployment
+    environment:
+      name: staging aws
+    steps:
+      - name: Ping Slack that tryfamly_co deployment is in-progress
+        run: echo "Pinging Slack..."
+      - name: Deploy to tryfamly_co
+        run: echo "Deploying..."
+      - name: Ping Slack that tryfamly_co is done deploying
+        run: echo "Pinging Slack..."
+
+  check-rollout-tryfamly-co:
+    name: "Check rollout: tryfamly_co"
+    needs: deploy-tryfamly-co
+    steps:
+      - name: Checking that tryfamly_co is stable
+        run: echo "Checking..."
+
+  ################# We start second part of canary deployment to famly_de + famly_other #################
+  deploy-famly-de:
+    name: "Deploy: famly_de"
+    needs: confirm-to-proceed-deployment
+    environment:
+      name: production azure
+    steps:
+      - name: Ping Slack that famly_de deployment is in-progress
+        run: echo "Pinging Slack..."
+      - name: Deploy to famly_de
+        run: echo "Deploying..."
+      - name: Ping Slack that famly_de is done deploying
+        run: echo "Pinging Slack..."
+
+  deploy-famly-other:
+    name: "Deploy: famly_other"
+    needs: confirm-to-proceed-deployment
+    environment:
+      name: production other
+    steps:
+      - name: Ping Slack that famly_other deployment is in-progress
+        run: echo "Pinging Slack..."
+      - name: Deploy to famly_other
+        run: echo "Deploying..."
+      - name: Ping Slack that famly_other is done deploying
+        run: echo "Pinging Slack..."
+
+  check-rollout-famly-de:
+    name: "Check rollout: famly_de"
+    needs: deploy-famly-de
+    steps:
+      - name: Checking that famly_de is stable
+        run: echo "Checking..."
+
+  check-rollout-famly-other:
+    name: "Check rollout: famly_other"
+    needs: deploy-famly-other
+    steps:
+      - name: Checking that famly_other is stable
+        run: echo "Checking..."
+
+  ################# In the final stage we deploy to famly_co #################
+  deploy-famly-co:
+    name: "Deploy: famly_co"
+    needs: [check-rollout-famly-de, check-rollout-famly-other]
+    environment:
+      name: production aws
+    steps:
+      - name: Ping Slack that famly_co deployment is in-progress
+        run: echo "Pinging Slack..."
+      - name: Deploy to famly_co
+        run: echo "Deploying..."
+      - name: Ping Slack that famly_co is done deploying
+        run: echo "Pinging Slack..."
+
+  check-rollout-famly-co:
+    name: "Check rollout: famly_co"
+    needs: [deploy-famly-co]
+    steps:
+      - name: Checking that tryfamly_co is stable
+        run: echo "Checking..."

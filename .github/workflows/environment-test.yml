@@ -1,4 +1,4 @@
-name: "environment test"
+name: "Environment Test"
 
 # Check out the documentation for more info:
 # - https://help.github.com/en/articles/workflow-syntax-for-github-actions
@@ -12,7 +12,7 @@ jobs:
     outputs:
       has-migrations: ${{ steps.whatchanged.outputs.has-migrations }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - id: whatchanged
         name: whatchanged
         run: |
@@ -32,6 +32,7 @@ jobs:
   run-migrations:
     runs-on: ubuntu-20.04
     needs: check-migrations
+    timeout-minutes: 1 # We set a timeout simply to avoid accidentally wasting too many CI minutes.
     if: needs.check-migrations.outputs.has-migrations == 'yes'
     environment:
       # A manual confirmation is enforced using environment protection rules.
