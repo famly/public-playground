@@ -4,9 +4,34 @@ name: "Continuous Deployment"
 # - https://help.github.com/en/articles/workflow-syntax-for-github-actions
 # - https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idoutputs
 on:
-  push:
-    branches:
-      - 'main'
+  # Trigger the deployment on a specific time.
+  # schedule:
+  #   # Every Mon-Thu at 10:00 and 14:00.
+  #   - cron:  '0 0 10,14 ? * MON,TUE,WED,THU *'
+  #   # Every Fri at 10:00.
+  #   - cron:  '0 0 10 ? * FRI *'
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Which commit of Nuclearfamly to use'
+        required: false
+        default: 'latest'
+      tags:
+        description: 'Wait for images to be built from currently running CI jobs'
+        required: false
+        type: boolean
+      environment:
+        description: 'Environment to run tests against'
+        default: All
+        required: false
+        type: choice
+        options:
+        - All
+        - tryfamly_co
+        - famly_de
+        - famly_other
+        - famly_co
+
 
 # Make only a single job matching this group runs at any given time. Newer workflows
 # are automatically queued.
