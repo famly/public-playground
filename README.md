@@ -16,7 +16,11 @@ Check out the flow charts in the following cases:
 
 # Continuous Deployment Flow
 
+Overview of the entire flow:
 <img width="1362" alt="Screenshot 2022-10-23 at 18 34 57" src="https://user-images.githubusercontent.com/1189998/197404226-11e41af7-25ad-4a96-82ae-ef740e735d4f.png">
 
-
+How it looks to trigger a workflow manually, from https://github.com/famly/public-playground/actions/workflows/deployment-test.yml:
 <img width="1179" alt="Screenshot 2022-10-23 at 18 31 29" src="https://user-images.githubusercontent.com/1189998/197404070-bcb3c4fb-e2a6-4e34-89b2-5902e52d284f.png">
+
+How it looks to approve or reject a deployment review:
+<img width="614" alt="Screenshot 2022-10-23 at 18 40 28" src="https://user-images.githubusercontent.com/1189998/197404454-1b2d3dd3-49ef-4a40-8a72-a34ba4ac9342.png">
