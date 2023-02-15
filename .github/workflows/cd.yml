@@ -1,0 +1,36 @@
+name: 'CD App'
+
+# Check out https://help.github.com/en/articles/workflow-syntax-for-github-actions for documentation on Actions.
+# Refer to https://help.github.com/en/articles/workflow-syntax-for-github-actions for documentation on Actions.
+on:
+    # Allow the workflow to be triggered via the API.
+    repository_dispatch:
+        types: [on-demand-deploy]
+    # Allow the workflow to be triggered manually.
+    workflow_dispatch:
+        inputs:
+            app-version:
+                required: true
+                description: 'The commit to deploy (e.g. 0010192539)'
+                type: string
+                # E.g. s3://famly-app-versions/0008999e0d.zip
+
+# Make only a single job matching this group runs at any given time. Newer workflows
+# are automatically queued.
+# C.f. https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#concurrency
+concurrency: production_environment
+
+defaults:
+    run:
+        shell: bash # Set the default shell to bash.
+
+jobs:
+    deploy-famly-co:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Verify extraction of current commit
+              if: ${{ github.event.client_payload.target == 'famly_co' && github.event.client_payload.version != '' && github.event.client_payload.artifact != '' }}
+              run: |
+                  echo ${{ github.event.client_payload.target }}
+                  echo ${{ github.event.client_payload.version }}
+                  echo ${{ github.event.client_payload.artifact }}
