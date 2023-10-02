@@ -1,0 +1,31 @@
+name: "Job Cross-Communication Test"
+
+# Check out the documentation for more info:
+# - https://help.github.com/en/articles/workflow-syntax-for-github-actions
+# - https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idoutputs
+on:
+  workflow_dispatch
+
+jobs:
+  check-migrations:
+    runs-on: ubuntu-20.04
+    if: github.ref == 'refs/heads/main'
+    outputs:
+      has-migrations: ${{ steps.whatchanged.outputs.has-migrations }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: whatchanged
+        name: whatchanged
+        run: |
+          echo "::set-output name=has-migrations::no"
+
+  output-validation:
+    runs-on: ubuntu-20.04
+    needs: check-migrations
+    if: needs.check-migrations.outputs.has-migrations != 'yes' && needs.check-migrations.outputs.has-migrations != 'no'
+    steps:
+      - name: Notify about invalid output
+        run: |
+          echo "The 'check-migrations' job produced invalid output:"
+          echo "${{needs.check-migrations.outputs.has-migrations}}"
+          exit 1
