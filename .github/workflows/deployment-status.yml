@@ -7,7 +7,7 @@ on:
 jobs:
   create-release:
     name: "Create release"
-    # if: ${{ github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'production aws' }}
+    if: ${{ github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'production aws' }}
     runs-on: ubuntu-latest
     steps:
       - name: "Output tag name and commit"
@@ -25,14 +25,14 @@ jobs:
           echo "deploymentState: $deploymentState"
           echo "deploymentEnvironment: $deploymentEnvironment"
 
-      # - uses: ncipollo/release-action@v1.13.0
-      #   with:
-      #     # Automatically create the tag from the commit if it doesn't exist.
-      #     tag: ${{ steps.tag-info.output.name }}
-      #     commit: ${{ steps.tag-info.output.commit }}
-      #     name: "Release ${{ steps.tag-info.output.commit }}"
-      #     # Automatically generate the release notes, which can be configured. See more here
-      #     # https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes.
-      #     generateReleaseNotes: true
-      #     # Mark the deployment as the latest.
-      #     makeLatest: true
+      - uses: ncipollo/release-action@v1.13.0
+        with:
+          # Automatically create the tag from the commit if it doesn't exist.
+          tag: ${{ steps.tag-info.output.name }}
+          commit: ${{ steps.tag-info.output.commit }}
+          name: "Release ${{ steps.tag-info.output.commit }}"
+          # Automatically generate the release notes, which can be configured. See more here
+          # https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes.
+          generateReleaseNotes: true
+          # Mark the deployment as the latest.
+          makeLatest: true
