@@ -7,7 +7,7 @@ on:
 jobs:
   create-release:
     name: "Create release"
-    # if: ${{ github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'production famly_co' }}
+    # if: ${{ github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'production aws' }}
     runs-on: ubuntu-latest
     steps:
       - name: "Output tag name and commit"
